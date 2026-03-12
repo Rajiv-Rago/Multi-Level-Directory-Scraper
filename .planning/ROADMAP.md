@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 01-01: Project skeleton, config models, CLI, structured logging (Wave 1) [CFG-01, CFG-02, CFG-03, CFG-05, RES-06]
-- [ ] 01-02: Politeness controller, dry-run mode (Wave 2) [RES-03, RES-04, CFG-04]
+- [x] 01-01: Project skeleton, config models, CLI, structured logging (Wave 1) [CFG-01, CFG-02, CFG-03, CFG-05, RES-06]
+- [x] 01-02: Politeness controller, dry-run mode (Wave 2) [RES-03, RES-04, CFG-04]
 
 ### Phase 2: Crawl Engine
 **Goal**: User can point the tool at a real multi-level directory and get raw extracted records from all levels, with JS rendering, pagination, and retry handling
@@ -89,7 +89,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Planned | - |
+| 1. Foundation | 2/2 | Executed | 2026-03-13 |
 | 2. Crawl Engine | 0/3 | Planned | - |
 | 3. Data Quality and Output | 0/2 | Planned | - |
 | 4. Resilience and Documentation | 0/2 | Planned | - |
