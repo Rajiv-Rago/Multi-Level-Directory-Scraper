@@ -1,0 +1,9 @@
+$ python -m scraper config.yaml --resume
+2026-03-13 08:25:10 [info     ] config_loaded              site=US Business Directory levels=3
+2026-03-13 08:25:10 [info     ] checkpoint_resumed         visited=187 pending=125
+2026-03-13 08:25:10 [info     ] Resuming crawl: skipping 187 already-visited pages
+2026-03-13 08:25:11 [info     ] fetch                      url=https://directory.example.com/great-lakes/manufacturing depth=2 renderer=static
+2026-03-13 08:25:13 [info     ] record_extracted           name=Lakefront Precision Inc region=Great Lakes category=Manufacturing
+...
+2026-03-13 08:31:22 [info     ] crawl_complete             total_records=247 total_urls=312 duration=370.1s
+2026-03-13 08:31:22 [info     ] Checkpoint file cleaned up

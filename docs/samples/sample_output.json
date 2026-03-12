@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "source": "directory.example.com",
+    "scraped_at": "2026-03-13T08:23:45Z",
+    "total_records": 247,
+    "regions": 6,
+    "categories": 12
+  },
+  "regions": {
+    "Pacific Northwest": {
+      "Technology": [
+        {
+          "name": "Cascade Software Solutions",
+          "address": "1200 Pine St, Seattle, WA 98101",
+          "phone": "(206) 555-0142",
+          "website": "https://cascadesoftware.example.com",
+          "description": "Full-stack development and cloud consulting",
+          "source_url": "https://directory.example.com/pacific-northwest/technology/cascade-software"
+        },
+        {
+          "name": "Emerald Data Systems",
+          "address": "834 Oak Ave, Portland, OR 97201",
+          "phone": "(503) 555-0198",
+          "website": "https://emeralddata.example.com",
+          "description": "Data engineering and analytics services",
+          "source_url": "https://directory.example.com/pacific-northwest/technology/emerald-data"
+        }
+      ],
+      "Healthcare": [
+        {
+          "name": "Rainier Medical Group",
+          "address": "2100 Cedar Blvd, Seattle, WA 98102",
+          "phone": "(206) 555-0231",
+          "website": "https://rainiermedical.example.com",
+          "description": "Multi-specialty medical practice",
+          "source_url": "https://directory.example.com/pacific-northwest/healthcare/rainier-medical"
+        }
+      ]
+    }
+  }
+}

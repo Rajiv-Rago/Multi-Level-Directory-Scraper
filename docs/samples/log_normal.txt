@@ -1,0 +1,12 @@
+2026-03-13 08:14:55 [info     ] config_loaded              site=US Business Directory levels=3
+2026-03-13 08:14:55 [info     ] politeness_init            robots_txt=allowed crawl_delay=2.0s
+2026-03-13 08:14:56 [info     ] fetch                      url=https://directory.example.com depth=0 renderer=static
+2026-03-13 08:14:57 [info     ] links_extracted            level=regions count=6 depth=0
+2026-03-13 08:15:00 [info     ] fetch                      url=https://directory.example.com/pacific-northwest depth=1 renderer=static
+2026-03-13 08:15:01 [info     ] links_extracted            level=categories count=4 depth=1
+2026-03-13 08:15:04 [info     ] fetch                      url=https://directory.example.com/pacific-northwest/technology depth=2 renderer=playwright
+2026-03-13 08:15:07 [info     ] pagination                 type=next_button pages_found=3
+2026-03-13 08:15:22 [info     ] record_extracted           name=Cascade Software Solutions region=Pacific Northwest category=Technology
+2026-03-13 08:15:24 [info     ] record_extracted           name=Emerald Data Systems region=Pacific Northwest category=Technology
+2026-03-13 08:16:01 [info     ] level_complete             level=categories depth=1 urls_processed=24 records_extracted=0
+2026-03-13 08:23:45 [info     ] crawl_complete             total_records=247 total_urls=312 duration=528.9s

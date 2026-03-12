@@ -1,0 +1,10 @@
+═══════════════════════════════════════════════════════
+  Data Quality Report
+═══════════════════════════════════════════════════════
+  Records:      263 total, 247 unique, 16 duplicates removed
+  Completeness: 94.2% field completeness
+  Phones:       231 normalized, 4 failed
+  URLs:         218 resolved, 2 invalid
+  Warnings:     6 total
+  Duration:     342.18s
+═══════════════════════════════════════════════════════
