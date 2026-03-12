@@ -98,48 +98,48 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| NAV-04 | — | Pending |
-| NAV-05 | — | Pending |
-| JS-01 | — | Pending |
-| JS-02 | — | Pending |
-| JS-03 | — | Pending |
-| EXT-01 | — | Pending |
-| EXT-02 | — | Pending |
-| EXT-03 | — | Pending |
-| EXT-04 | — | Pending |
-| EXT-05 | — | Pending |
-| VAL-01 | — | Pending |
-| VAL-02 | — | Pending |
-| VAL-03 | — | Pending |
-| VAL-04 | — | Pending |
-| VAL-05 | — | Pending |
-| VAL-06 | — | Pending |
-| OUT-01 | — | Pending |
-| OUT-02 | — | Pending |
-| OUT-03 | — | Pending |
-| RES-01 | — | Pending |
-| RES-02 | — | Pending |
-| RES-03 | — | Pending |
-| RES-04 | — | Pending |
-| RES-05 | — | Pending |
-| RES-06 | — | Pending |
-| RES-07 | — | Pending |
-| RES-08 | — | Pending |
-| CFG-01 | — | Pending |
-| CFG-02 | — | Pending |
-| CFG-03 | — | Pending |
-| CFG-04 | — | Pending |
-| CFG-05 | — | Pending |
-| DOC-01 | — | Pending |
+| CFG-01 | Phase 1 | Pending |
+| CFG-02 | Phase 1 | Pending |
+| CFG-03 | Phase 1 | Pending |
+| CFG-04 | Phase 1 | Pending |
+| CFG-05 | Phase 1 | Pending |
+| RES-03 | Phase 1 | Pending |
+| RES-04 | Phase 1 | Pending |
+| RES-06 | Phase 1 | Pending |
+| NAV-01 | Phase 2 | Pending |
+| NAV-02 | Phase 2 | Pending |
+| NAV-03 | Phase 2 | Pending |
+| NAV-04 | Phase 2 | Pending |
+| NAV-05 | Phase 2 | Pending |
+| JS-01 | Phase 2 | Pending |
+| JS-02 | Phase 2 | Pending |
+| JS-03 | Phase 2 | Pending |
+| EXT-01 | Phase 2 | Pending |
+| EXT-02 | Phase 2 | Pending |
+| EXT-03 | Phase 2 | Pending |
+| EXT-04 | Phase 2 | Pending |
+| EXT-05 | Phase 2 | Pending |
+| RES-01 | Phase 2 | Pending |
+| RES-02 | Phase 2 | Pending |
+| VAL-01 | Phase 3 | Pending |
+| VAL-02 | Phase 3 | Pending |
+| VAL-03 | Phase 3 | Pending |
+| VAL-04 | Phase 3 | Pending |
+| VAL-05 | Phase 3 | Pending |
+| VAL-06 | Phase 3 | Pending |
+| OUT-01 | Phase 3 | Pending |
+| OUT-02 | Phase 3 | Pending |
+| OUT-03 | Phase 3 | Pending |
+| RES-05 | Phase 4 | Pending |
+| RES-07 | Phase 4 | Pending |
+| RES-08 | Phase 4 | Pending |
+| DOC-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 36 total
-- Mapped to phases: 0
-- Unmapped: 36 ⚠️
+- Mapped to phases: 36
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-13*
-*Last updated: 2026-03-13 after initial definition*
+*Last updated: 2026-03-13 after roadmap creation*
