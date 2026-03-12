@@ -15,68 +15,66 @@ Raw extracted records from Phase 2 are cleaned, validated, deduplicated, and exp
 
 ### Phone normalization
 - Normalize to E.164 format (e.g., +14155551234)
-- Assume a default country code from config (site-specific setting) for numbers without country prefix
-- Numbers that cannot be parsed are kept as-is with a warning logged and counted in validation report
-- Use the `phonenumbers` library (Google's libphonenumber port) -- the standard Python solution for this
+- Default country code is a required field in site config -- no guessing
+- Numbers that cannot be parsed are kept as-is with a warning logged and counted in validation report (never discard data)
+- Use `phonenumbers` library (Google's libphonenumber port) -- industry standard, impressive on a resume
 
 ### URL validation and resolution
 - Relative URLs resolved to absolute using the source page URL as base
 - Validated as well-formed (scheme + host at minimum)
-- Invalid URLs kept in output but flagged in validation report (don't discard data)
-- No HTTP HEAD check to verify URLs are live -- that would add network requests and slow the pipeline
+- Invalid URLs kept in output but flagged in validation report (never discard data)
+- No HTTP HEAD check -- out of scope, would add latency and network load
 
 ### Text cleaning
 - Strip leading/trailing whitespace from all text fields
-- Decode HTML entities (e.g., `&amp;` -> `&`, `&#x27;` -> `'`)
+- Decode HTML entities (`&amp;` -> `&`, `&#x27;` -> `'`, etc.)
 - Collapse internal whitespace runs to single spaces (common in scraped HTML)
-- Applied to every text field uniformly, before other validation steps
+- Applied uniformly to every text field, before other validation steps
 
 ### Record deduplication
-- Composite key: normalized(name) + normalized(address) as primary key
-- Fallback: source_url if name+address is insufficient (e.g., missing address)
+- Composite key: normalized(name) + normalized(address) as primary
+- Fallback: source_url when address is missing
 - Normalization for dedup: lowercase, strip whitespace, remove punctuation
 - When duplicates found: keep the record with the most complete fields (fewest nulls)
-- Duplicates are logged with both records' source_urls for traceability
-- Dedup runs after all validation/cleaning (so normalized values are compared, not raw)
+- Log every dedup decision with both records' source_urls for traceability
+- Dedup runs after all cleaning/normalization (compare clean values, not raw)
 
 ### CSV export
-- UTF-8 with BOM (ensures Excel opens it correctly without encoding dialog)
+- UTF-8 with BOM -- required for Excel to open without encoding prompts
 - Columns in order: region, category, name, address, phone, website, description, source_url, scraped_at
-- Standard CSV quoting (RFC 4180) -- fields containing commas, quotes, or newlines are quoted
-- One file per run: `data.csv` in the output directory
+- RFC 4180 quoting
+- Output file: `data.csv` in configured output directory
 
 ### JSON export
-- Nested hierarchy: `{ regions: [{ name, categories: [{ name, records: [...] }] }] }`
-- Each record contains all fields (same as CSV columns minus region/category which are structural)
-- Pretty-printed with 2-space indent for readability
-- One file per run: `data.json` in the output directory
+- Nested hierarchy: `{ metadata: {...}, regions: [{ name, categories: [{ name, records: [...] }] }] }`
+- Top-level `metadata` object includes: scraped_at timestamp, target site URL, total record count, schema version
+- Each record contains all entity fields (region/category are structural, not repeated per record)
+- Pretty-printed with 2-space indent
+- Output file: `data.json` in configured output directory
 
 ### Validation report
-- Plain text format (`validation_report.txt`) as specified in the behavioral spec
-- Sections: run metadata (timestamp, duration, target site), total records, field completeness (per-field counts of null/empty), duplicates found and removed, extraction errors/warnings, phone normalization failures, invalid URLs
-- Human-readable format -- not machine-parseable (this is for the portfolio reviewer to glance at)
+- **JSON format** (`validation_report.json`), not plain text -- machine-readable reports are more impressive for a portfolio piece and demonstrate data engineering rigor
+- Sections: run metadata (timestamp, duration, config used), record counts (total, unique, duplicates removed), field completeness (per-field: count present, count missing, percentage), normalization stats (phones normalized, phones failed, URLs resolved, URLs invalid), warnings list (each with field, value, reason, source_url)
+- Also print a human-readable summary to stdout at end of run so the terminal shows key metrics
+- The ">95% field completeness" acceptance criteria number should be front and center in both the JSON report and terminal summary
 
 ### Pipeline architecture
-- Post-processing pipeline that runs after all records are extracted
-- Order: text cleaning -> phone normalization -> URL validation -> deduplication -> export (CSV + JSON) -> validation report
-- Operates on the full record set in memory (directory-scale data fits in memory easily)
-- Pipeline is a separate module from the crawl engine -- takes records in, writes files out
-
-### Claude's Discretion
-- Exact validation report formatting and section order
-- Whether to use pandas DataFrames or plain dicts for the pipeline (pandas suggested in spec but dicts may be simpler)
-- Internal module structure (single file vs split by concern)
-- Specific error message wording in logs
+- Post-processing pipeline, separate module from crawl engine
+- Order: text cleaning -> phone normalization -> URL validation -> deduplication -> export (CSV + JSON + report)
+- Use pydantic models to define the record schema -- validates structure, provides serialization, and looks professional in the codebase
+- Each pipeline stage is a function that takes records in, returns records out (composable, testable)
+- Validation issues accumulate in a report collector passed through the pipeline, not scattered across log files
+- Operates on full record set in memory (directory-scale data fits easily)
 
 </decisions>
 
 <specifics>
 ## Specific Ideas
 
-- CSV must open cleanly in both Excel and Google Sheets -- UTF-8 BOM is critical for Excel compatibility
-- Validation report is portfolio-facing: a reviewer should see it and immediately understand data quality achieved
-- The spec acceptance criteria requires ">95% field completeness on non-optional fields" -- the report should make this number obvious
-- Phone normalization to E.164 requires knowing the default country for the target site -- this comes from the site config
+- Portfolio reviewer should be able to open `validation_report.json` and immediately see data quality metrics -- this is the "proof of work" for the project
+- Terminal summary after a run should look polished: record counts, completeness percentage, duplicate count, duration -- similar to how pytest prints a summary line
+- The pydantic model for records doubles as documentation of the data schema -- a reviewer reading the code sees exactly what fields exist and their types
+- JSON output with a `metadata` top-level key shows the output is self-describing, not just a raw data dump
 
 </specifics>
 
@@ -84,25 +82,27 @@ Raw extracted records from Phase 2 are cleaned, validated, deduplicated, and exp
 ## Existing Code Insights
 
 ### Reusable Assets
-- No code exists yet -- project is in planning phase. Phase 3 will be built from scratch.
+- No code exists yet -- project is in planning phase
 
 ### Established Patterns
-- Config-driven architecture (from Phase 1) -- default country code for phone normalization should be a config field
-- Structured logging (from Phase 1) -- validation warnings should use the same logging system
+- Config-driven architecture (Phase 1) -- default country code for phone normalization goes in site config
+- Structured logging (Phase 1) -- validation warnings use the same logging system
+- Python 3.10+ -- can use match statements, modern type hints, dataclasses/pydantic
 
 ### Integration Points
-- Input: receives extracted records from Phase 2's crawl engine (list of dicts or similar)
-- Output: writes data.csv, data.json, validation_report.txt to configured output directory
-- Config: reads site-specific settings (default country code, output directory) from the YAML config established in Phase 1
+- Input: receives extracted records from Phase 2's crawl engine (list of dicts or pydantic models)
+- Output: writes data.csv, data.json, validation_report.json to configured output directory
+- Config: reads site-specific settings (default country code, output directory) from Phase 1 YAML config
+- Stdout: prints human-readable summary at end of pipeline run
 
 </code_context>
 
 <deferred>
 ## Deferred Ideas
 
-- NDJSON output for streaming pipelines -- listed as v2 requirement (OUT-V2-01), not in Phase 3 scope
+- NDJSON output for streaming pipelines -- listed as v2 requirement (OUT-V2-01)
 - Database storage -- explicitly out of scope per PROJECT.md
-- JSON schema validation of output -- could be useful but not required; reviewer can validate manually
+- JSON schema validation of output files -- could auto-generate from pydantic models in a future phase
 
 </deferred>
 
