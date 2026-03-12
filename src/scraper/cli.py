@@ -118,6 +118,8 @@ def main(
     max_pages: Annotated[Optional[int], typer.Option("--max-pages", help="Maximum pages per level")] = None,
     log_level: Annotated[Optional[str], typer.Option("--log-level", help="Log level: debug/info/warning")] = None,
     dry_run: Annotated[bool, typer.Option("--dry-run", help="Validate config and test selectors without full crawl")] = False,
+    resume: Annotated[bool, typer.Option("--resume", help="Resume from checkpoint if available")] = False,
+    force: Annotated[bool, typer.Option("--force", help="Force resume even with config mismatch")] = False,
 ) -> None:
     """Multi-level directory scraper."""
     config = load_config(config_path)
@@ -139,5 +141,24 @@ def main(
     if dry_run:
         exit_code = asyncio.run(run_dry_run(config, logger))
         raise typer.Exit(exit_code)
+
+    from scraper.checkpoint import CheckpointManager, config_hash as compute_config_hash
+
+    output_path = Path(config.site.output_dir)
+    cfg_hash = compute_config_hash({"base_url": config.site.base_url, "levels": len(config.levels)})
+    checkpoint_mgr = CheckpointManager(output_dir=output_path, config_hash=cfg_hash)
+
+    if resume:
+        checkpoint_state = checkpoint_mgr.load(force=force)
+        if checkpoint_state:
+            logger.info(
+                "checkpoint_resumed",
+                visited=len(checkpoint_state.get("visited_urls", set())),
+                pending=len(checkpoint_state.get("pending_urls", [])),
+            )
+        else:
+            logger.warning("no_valid_checkpoint", message="No valid checkpoint found, starting fresh")
+    elif checkpoint_mgr.exists:
+        logger.info("checkpoint_hint", message="Checkpoint found. Use --resume to continue from where you left off.")
 
     raise typer.Exit(0)
