@@ -1,0 +1,54 @@
+# Multi-Level Directory Scraper Configuration
+# This example shows a 2-level setup: regions -> listings
+
+site:
+  name: "Example Directory"
+  base_url: "https://example-directory.com"
+
+  # Output directory for scraped data and logs
+  output_dir: "./output"
+
+  # Random delay between requests (seconds)
+  request_delay:
+    min: 1.0
+    max: 3.0
+
+  # Maximum pages to scrape per level (null for unlimited)
+  max_pages: 100
+
+  # Log verbosity: debug, info, warning
+  log_level: "info"
+
+# Levels define the hierarchy to traverse, from broadest to most specific.
+# Each level must have a unique name and sequential depth starting from 0.
+levels:
+  - name: "regions"
+    depth: 0
+    link_selector: "a.region-link"
+    fields:
+      - name: "region_name"
+        selector: "h2.region-title"
+      - name: "region_url"
+        selector: "a.region-link"
+        attribute: "href"
+      - name: "region_count"
+        selector: "span.listing-count"
+        default: "0"
+
+  - name: "listings"
+    depth: 1
+    link_selector: "a.listing-link"
+    pagination:
+      type: "next_button"
+      selector: "a.next-page"
+    fields:
+      - name: "listing_name"
+        selector: "h3.listing-title"
+      - name: "address"
+        selector: "span.address"
+      - name: "phone"
+        selector: "span.phone"
+        default: "N/A"
+      - name: "website"
+        selector: "a.website-link"
+        attribute: "href"
