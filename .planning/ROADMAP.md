@@ -90,6 +90,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/2 | Planned | - |
-| 2. Crawl Engine | 0/0 | Not started | - |
+| 2. Crawl Engine | 0/3 | Planned | - |
 | 3. Data Quality and Output | 0/2 | Planned | - |
 | 4. Resilience and Documentation | 0/2 | Planned | - |
