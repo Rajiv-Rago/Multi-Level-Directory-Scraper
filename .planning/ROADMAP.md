@@ -29,11 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User receives a clear, specific error message when config is invalid (missing required fields, bad selector syntax, wrong types)
   4. User can run dry-run mode which fetches one page per level, extracts fields, and prints results to terminal without writing output files
   5. All operations produce structured log output with timestamps, URLs, and event types to both terminal and log file
-**Plans**: TBD
+**Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01: Project skeleton, config models, CLI, structured logging (Wave 1) [CFG-01, CFG-02, CFG-03, CFG-05, RES-06]
+- [ ] 01-02: Politeness controller, dry-run mode (Wave 2) [RES-03, RES-04, CFG-04]
 
 ### Phase 2: Crawl Engine
 **Goal**: User can point the tool at a real multi-level directory and get raw extracted records from all levels, with JS rendering, pagination, and retry handling
@@ -76,11 +76,11 @@ Plans:
   1. If the scraper is interrupted mid-run (Ctrl+C or SIGTERM), all records extracted so far are saved to disk
   2. On restart after interruption, the scraper detects a checkpoint file and resumes from where it left off (no re-scraping of already-visited pages)
   3. README documents the problem, approach, data quality, resilience, sample output, and setup instructions such that a new user can run the tool in under 5 minutes
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Checkpoint/resume and signal handling (TDD)
+- [ ] 04-02-PLAN.md — Portfolio-quality README documentation
 
 ## Progress
 
@@ -89,7 +89,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/0 | Not started | - |
+| 1. Foundation | 0/2 | Planned | - |
 | 2. Crawl Engine | 0/0 | Not started | - |
 | 3. Data Quality and Output | 0/0 | Not started | - |
-| 4. Resilience and Documentation | 0/0 | Not started | - |
+| 4. Resilience and Documentation | 0/2 | Planned | - |
