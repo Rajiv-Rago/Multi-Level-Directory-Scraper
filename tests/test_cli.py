@@ -132,3 +132,33 @@ class TestDryRun:
         path = write_config({"site": {"name": "bad"}})
         result = runner.invoke(app, [str(path), "--dry-run"])
         assert result.exit_code == 1
+
+
+class TestIntegration:
+    def test_full_flow_config_to_log(self, valid_config_dict, write_config, tmp_path):
+        import json
+
+        valid_config_dict["site"]["output_dir"] = str(tmp_path / "output")
+        path = write_config(valid_config_dict)
+        result = runner.invoke(app, [str(path)])
+        assert result.exit_code == 0
+
+        log_file = tmp_path / "output" / "scrape.log"
+        assert log_file.exists()
+        lines = log_file.read_text().strip().splitlines()
+        assert len(lines) >= 1
+        entry = json.loads(lines[0])
+        assert "timestamp" in entry
+        assert "level" in entry
+        assert "event" in entry
+        assert entry["event"] == "config_loaded"
+
+    def test_exit_codes(self, valid_config_dict, write_config, tmp_path):
+        valid_config_dict["site"]["output_dir"] = str(tmp_path / "output")
+        path = write_config(valid_config_dict)
+        result_ok = runner.invoke(app, [str(path)])
+        assert result_ok.exit_code == 0
+
+        bad_path = write_config({"site": {"name": "no-url"}})
+        result_bad = runner.invoke(app, [str(bad_path)])
+        assert result_bad.exit_code == 1
