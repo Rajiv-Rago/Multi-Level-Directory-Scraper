@@ -1,54 +1,87 @@
-# Multi-Level Directory Scraper Configuration
-# This example shows a 2-level setup: regions -> listings
+# Example site configuration for the multi-level directory scraper.
+# This demonstrates the full config schema with all available options.
 
 site:
-  name: "Example Directory"
+  name: "Example Business Directory"
   base_url: "https://example-directory.com"
-
-  # Output directory for scraped data and logs
   output_dir: "./output"
-
-  # Random delay between requests (seconds)
   request_delay:
     min: 1.0
     max: 3.0
-
-  # Maximum pages to scrape per level (null for unlimited)
-  max_pages: 100
-
-  # Log verbosity: debug, info, warning
+  max_pages: 500
   log_level: "info"
 
-# Levels define the hierarchy to traverse, from broadest to most specific.
-# Each level must have a unique name and sequential depth starting from 0.
+# Levels define the hierarchy of the directory site.
+# The scraper traverses them in order (depth 0 -> 1 -> 2).
 levels:
+  # Level 0: Homepage / top-level directory
+  # Extracts links to region pages
   - name: "regions"
     depth: 0
     link_selector: "a.region-link"
+    context_selector: "h1.directory-title"
+    renderer: "static"    # "static" uses httpx, "browser" uses Playwright
     fields:
       - name: "region_name"
         selector: "h2.region-title"
-      - name: "region_url"
-        selector: "a.region-link"
-        attribute: "href"
-      - name: "region_count"
-        selector: "span.listing-count"
-        default: "0"
 
+  # Level 1: Region listing pages
+  # Extracts links to individual business detail pages
+  # Supports pagination via "next page" links
   - name: "listings"
     depth: 1
     link_selector: "a.listing-link"
+    context_selector: "h2.region-title"
+    renderer: "browser"
+    wait_selector: "div.listing-results"  # Wait for JS to render results
     pagination:
-      type: "next_button"
-      selector: "a.next-page"
+      type: "next_page"           # "next_page", "load_more", or "infinite_scroll"
+      selector: "a.pagination-next"
+      max_pages: 50               # Safety cap to prevent infinite loops
     fields:
       - name: "listing_name"
-        selector: "h3.listing-title"
+        selector: "h3.name"
+      - name: "listing_url"
+        selector: "a.listing-link"
+        attribute: "href"
+
+  # Level 2: Detail pages
+  # Extracts structured data fields from each business page
+  - name: "details"
+    depth: 2
+    link_selector: null           # Detail pages don't have child links
+    renderer: "browser"
+    wait_selector: "div.business-info"
+    fields:
+      # Multiple selectors per field: tried in order, first match wins
+      - name: "business_name"
+        selector: "h1.business-name"
       - name: "address"
-        selector: "span.address"
+        selector: "span.address, div.address-line"
       - name: "phone"
-        selector: "span.phone"
-        default: "N/A"
+        selector: "a.phone-link, span.phone-number"
+        attribute: "text"         # "text" (default) or an HTML attribute like "href"
       - name: "website"
         selector: "a.website-link"
-        attribute: "href"
+        attribute: "href"         # Extract the href attribute instead of text
+      - name: "rating"
+        selector: "span.rating-value, div.star-rating"
+      - name: "description"
+        selector: "div.business-description, p.about-text"
+
+# Retry configuration for resilient fetching
+retry:
+  rate_limit:
+    max_attempts: 3
+    min_wait: 5                   # Exponential backoff: 5s -> 10s -> 20s (capped at max_wait)
+    max_wait: 60
+  server_error:
+    max_attempts: 2
+    wait: 10                      # Fixed wait between retries
+
+# Timeout configuration (seconds)
+timeouts:
+  navigation: 30                  # Page load timeout
+  wait_selector: 15               # CSS selector wait timeout
+  connect: 10                     # HTTP connection timeout
+  read: 30                        # HTTP read timeout
