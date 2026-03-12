@@ -45,12 +45,12 @@ Plans:
   3. Paginated listings are followed to completion -- all pages of results are scraped, not just the first page
   4. Each extracted record carries its region and category context (hierarchical relationship preserved from parent pages)
   5. The same URL is never fetched twice in a run, and navigation failures (404, timeout) are logged and skipped without crashing
-**Plans**: TBD
+**Plans**: 3 plans, 2 waves
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01: URL Frontier + Dual-Mode Fetcher (Wave 1)
+- [ ] 02-02: HTML Extractor + Retry Logic (Wave 1)
+- [ ] 02-03: Pagination Handler + Crawl Orchestrator (Wave 2)
 
 ### Phase 3: Data Quality and Output
 **Goal**: Raw extracted records are cleaned, validated, deduplicated, and exported as CSV and JSON files that open correctly in any tool
