@@ -66,6 +66,23 @@ class PlaywrightFetcher:
         finally:
             await page.close()
 
+    async def fetch_with_page(self, url: str, *, wait_selector: str | None = None, timeout: float = 15.0):
+        """Fetch a page and return (html, page) tuple. Caller must close page."""
+        page = await self._context.new_page()
+        try:
+            await page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            timeout_ms = int(timeout * 1000)
+            if wait_selector:
+                await page.wait_for_selector(wait_selector, timeout=timeout_ms)
+            else:
+                await page.wait_for_load_state("networkidle", timeout=timeout_ms)
+        except PlaywrightTimeout:
+            logger.warning("playwright_timeout", url=url, timeout=timeout)
+        except Exception:
+            logger.exception("playwright_fetch_error", url=url)
+        html = await page.content()
+        return html, page
+
     async def close(self) -> None:
         if self._context:
             await self._context.close()
