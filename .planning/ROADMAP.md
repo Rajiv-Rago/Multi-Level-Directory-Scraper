@@ -62,11 +62,11 @@ Plans:
   3. CSV output opens cleanly in Excel and Google Sheets with correct column headers, UTF-8 encoding, and no artifacts
   4. JSON output preserves the hierarchical directory structure (records nested under region/category)
   5. A validation report is produced showing total records, records with missing fields, duplicates found, extraction errors, and run duration
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01: Pipeline core — pydantic models, text cleaning, phone normalization, URL validation, deduplication (Wave 1)
+- [ ] 03-02: Export and reporting — CSV/JSON export, validation report, pipeline runner (Wave 2)
 
 ### Phase 4: Resilience and Documentation
 **Goal**: The scraper survives interruptions without losing work, and the project is documented as a portfolio piece
@@ -91,5 +91,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/2 | Planned | - |
 | 2. Crawl Engine | 0/0 | Not started | - |
-| 3. Data Quality and Output | 0/0 | Not started | - |
+| 3. Data Quality and Output | 0/2 | Planned | - |
 | 4. Resilience and Documentation | 0/2 | Planned | - |
