@@ -35,16 +35,16 @@ This scraper solves all of these in a single config-driven tool.
 
 ```bash
 # Clone and install
-git clone https://github.com/your-username/multi-level-directory-scraper.git
-cd multi-level-directory-scraper
-pip install -e .
-playwright install chromium
+git clone https://github.com/Rajiv-Rago/Multi-Level-Directory-Scraper.git
+cd Multi-Level-Directory-Scraper
+uv sync
+uv run playwright install chromium
 
 # Run with your config
-python -m scraper config.yaml
+uv run python -m scraper config.yaml
 
 # Validate selectors before a full crawl
-python -m scraper config.yaml --dry-run
+uv run python -m scraper config.yaml --dry-run
 ```
 
 ## Architecture
@@ -240,28 +240,31 @@ levels:
 
 ## Setup
 
-**Prerequisites:** Python 3.12+
+**Prerequisites:** Python 3.12+, [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
 ```bash
 # 1. Clone
-git clone https://github.com/your-username/multi-level-directory-scraper.git
-cd multi-level-directory-scraper
+git clone https://github.com/Rajiv-Rago/Multi-Level-Directory-Scraper.git
+cd Multi-Level-Directory-Scraper
 
-# 2. Install
-pip install -e .
-playwright install chromium
+# 2. Install (pick one)
+uv sync                    # recommended
+pip install -e .           # fallback
 
-# 3. Verify
-python -m scraper --help
+# 3. Install browser
+uv run playwright install chromium
 
-# 4. Dry-run (validate selectors without full crawl)
-python -m scraper config.yaml --dry-run
+# 4. Verify
+uv run python -m scraper --help
 
-# 5. Full crawl
-python -m scraper config.yaml
+# 5. Dry-run (validate selectors without full crawl)
+uv run python -m scraper config.yaml --dry-run
 
-# 6. Resume interrupted crawl
-python -m scraper config.yaml --resume
+# 6. Full crawl
+uv run python -m scraper config.yaml
+
+# 7. Resume interrupted crawl
+uv run python -m scraper config.yaml --resume
 ```
 
 **CLI options:**
@@ -280,8 +283,8 @@ python -m scraper config.yaml --resume
 **Running tests:**
 
 ```bash
-pip install -e ".[dev]"
-python -m pytest
+uv sync --dev
+uv run pytest
 ```
 
 ## Project Structure
