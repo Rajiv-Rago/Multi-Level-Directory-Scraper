@@ -84,10 +84,12 @@ class TestCLI:
         assert len(log_files) == 0
 
     def test_cli_help_output(self):
-        result = runner.invoke(app, ["--help"], env={"NO_COLOR": "1"})
+        import re
+        result = runner.invoke(app, ["--help"])
         assert result.exit_code == 0
-        assert "config-path" in result.output.lower() or "config_path" in result.output.lower()
-        assert "--dry-run" in result.output
+        plain = re.sub(r"\x1b\[[0-9;]*m", "", result.output)
+        assert "config-path" in plain.lower() or "config_path" in plain.lower()
+        assert "--dry-run" in plain
 
 
 class TestDryRun:
