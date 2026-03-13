@@ -1,6 +1,6 @@
 [project]
 name = "multi-level-directory-scraper"
-version = "0.1.0"
+version = "1.0.0"
 description = "A multi-level directory scraper that extracts structured data from hierarchical websites"
 requires-python = ">=3.12"
 dependencies = [
