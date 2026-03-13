@@ -1,6 +1,6 @@
 # Multi-Level Directory Scraper
 
-![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
+![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 A config-driven scraper that navigates hierarchical business directories (regions -> categories -> detail pages), handles JavaScript-rendered content via Playwright, and outputs clean, validated datasets in CSV and JSON.
@@ -240,7 +240,7 @@ levels:
 
 ## Setup
 
-**Prerequisites:** Python 3.10+
+**Prerequisites:** Python 3.12+
 
 ```bash
 # 1. Clone
