@@ -30,6 +30,9 @@ scraper = "scraper.cli:app"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+]
 
 [build-system]
 requires = ["hatchling"]

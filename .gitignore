@@ -28,5 +28,3 @@ htmlcov/
 .coverage
 coverage.xml
 
-# Lock file (reproducible via pyproject.toml)
-uv.lock
