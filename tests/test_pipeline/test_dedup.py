@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 
 from models.record import DirectoryRecord
 from pipeline.dedup import deduplicate
-from validation.collector import ValidationCollector
 
 
 def _make_record(**overrides):

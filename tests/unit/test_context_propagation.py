@@ -1,6 +1,5 @@
 """Tests for ancestor context propagation through crawl levels."""
 
-import pytest
 
 from scraper.frontier import URLFrontier
 

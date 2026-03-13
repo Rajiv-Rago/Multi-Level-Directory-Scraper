@@ -1,0 +1,70 @@
+# Devpost Hackathon Directory - Hard difficulty
+# 4-level hierarchy: hackathon listing → hackathon detail → project gallery → project detail
+# Level 0 is JS-rendered (requires Playwright). Cross-domain navigation (subdomains).
+# Scope: max 3 pages per level, debug logging
+
+site:
+  name: "Devpost Hackathons"
+  base_url: "https://devpost.com/hackathons?status=ended"
+  output_dir: "./output/devpost"
+  request_delay:
+    min: 2.0
+    max: 4.0
+  max_pages: 3
+  log_level: "debug"
+
+levels:
+  # Level 0: Hackathon listing (JS-rendered SPA, content loaded via API)
+  # Cards are injected by JS after page load; needs browser + wait_selector
+  # Link selector may need tuning after inspecting rendered DOM with Playwright
+  - name: "hackathons"
+    depth: 0
+    link_selector: "a[href*='ref_feature=challenge']"
+    context_selector: "h1"
+    renderer: "browser"
+    wait_selector: ".challenge-listing, .hackathon-tile, [data-hackathon-id]"
+    fields:
+      - name: "hackathon_name"
+        selector: "h3, h2"
+
+  # Level 1: Hackathon detail page (lives on subdomain, e.g. treehacks-2024.devpost.com)
+  # Extract link to the project gallery
+  - name: "hackathon_detail"
+    depth: 1
+    link_selector: "a[href*='project-gallery']"
+    context_selector: "h1"
+    renderer: "static"
+    fields:
+      - name: "hackathon_title"
+        selector: "h1"
+
+  # Level 2: Project gallery (server-rendered, paginated)
+  # Cards: <a href="https://devpost.com/software/{slug}"><h5>Title</h5></a>
+  # Pagination: <a href="/project-gallery?page=2">»</a>
+  - name: "projects"
+    depth: 2
+    link_selector: "a[href*='/software/']"
+    context_selector: "h1"
+    renderer: "static"
+    pagination:
+      type: "next_page"
+      selector: "li:last-child a[href*='page=']"
+      max_pages: 3
+    fields:
+      - name: "project_title"
+        selector: "a[href*='/software/'] h5"
+
+  # Level 3: Project detail page (server-rendered, back on devpost.com main domain)
+  # Rich structured data: title, tagline, technologies, description
+  - name: "details"
+    depth: 3
+    renderer: "static"
+    fields:
+      - name: "name"
+        selector: "h1#app-title"
+      - name: "tagline"
+        selector: "#app-details-left > p"
+      - name: "built_with"
+        selector: "#built-with span.cp-tag"
+      - name: "description"
+        selector: "#app-details-left"

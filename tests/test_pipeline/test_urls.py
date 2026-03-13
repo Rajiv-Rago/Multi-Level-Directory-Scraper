@@ -6,7 +6,6 @@ import pytest
 
 from models.record import DirectoryRecord
 from pipeline.urls import validate_urls
-from validation.collector import ValidationCollector
 
 
 def _make_record(**overrides):

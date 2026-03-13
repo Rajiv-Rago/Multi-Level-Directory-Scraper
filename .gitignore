@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+
+# Output data
+output/
+
+# Planning (internal scaffolding)
+.planning/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# Coverage
+htmlcov/
+.coverage
+coverage.xml
+
+# Lock file (reproducible via pyproject.toml)
+uv.lock

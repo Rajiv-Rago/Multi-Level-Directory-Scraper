@@ -1,6 +1,5 @@
 """Tests for HTML field extraction, link extraction, and context extraction."""
 
-import pytest
 
 from scraper.extractor import Extractor
 

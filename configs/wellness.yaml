@@ -1,0 +1,67 @@
+# Wellness.com Chiropractor Directory - Medium difficulty
+# 4-level hierarchy: specialty → states → cities (paginated) → provider details
+# Static rendering, no JS required. Minimal CSS classes on elements.
+# Scope: Chiropractors only, max 3 pages per level
+
+site:
+  name: "Wellness.com Chiropractors"
+  base_url: "https://www.wellness.com/find/chiropractor"
+  output_dir: "./output/wellness"
+  request_delay:
+    min: 2.0
+    max: 4.0
+  max_pages: 3
+  log_level: "info"
+
+levels:
+  # Level 0: Specialty page - extract state links
+  # State links have title attributes; city links nested below do not
+  - name: "states"
+    depth: 0
+    link_selector: "a[title][href^='/find/chiropractor/']"
+    context_selector: "h1"
+    renderer: "static"
+    fields:
+      - name: "state_name"
+        selector: "a[title][href^='/find/chiropractor/']"
+
+  # Level 1: State page - extract city links
+  # Cities listed as <li><a href="/find/chiropractor/ny/albany">Albany</a></li>
+  - name: "cities"
+    depth: 1
+    link_selector: "li a[href^='/find/chiropractor/']"
+    context_selector: "h1"
+    renderer: "static"
+    fields:
+      - name: "city_name"
+        selector: "li a[href^='/find/chiropractor/']"
+
+  # Level 2: City page - extract provider detail links (with pagination)
+  # Provider links: <a href="/dir/6834982/chiropractor/ny/new-york/...">
+  # Pagination: <li><a href="/find/chiropractor/ny/new york/2">Next</a></li>
+  - name: "providers"
+    depth: 2
+    link_selector: "a[href*='/dir/'][href*='/chiropractor/']"
+    context_selector: "h1"
+    renderer: "static"
+    pagination:
+      type: "next_page"
+      selector: "li:last-child a[href*='/find/chiropractor/']"
+      max_pages: 3
+    fields:
+      - name: "provider_name"
+        selector: "a[href*='/dir/'][href*='/chiropractor/'] h3"
+
+  # Level 3: Provider detail page - extract practitioner data
+  # Minimal CSS classes; relies on tag structure and JSON-LD schema
+  - name: "details"
+    depth: 3
+    renderer: "static"
+    fields:
+      - name: "name"
+        selector: "h1"
+      - name: "website"
+        selector: "a[href^='http']:not([href*='wellness.com'])"
+        attribute: "href"
+      - name: "description"
+        selector: "p"

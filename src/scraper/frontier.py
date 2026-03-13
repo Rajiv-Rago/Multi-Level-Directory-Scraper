@@ -62,6 +62,12 @@ class URLFrontier:
     def has_pending(self, depth: int) -> bool:
         return bool(self._queues.get(depth))
 
+    def drain(self, depth: int) -> None:
+        """Discard all pending items at the given depth."""
+        queue = self._queues.get(depth)
+        if queue:
+            queue.clear()
+
     @property
     def visited_count(self) -> int:
         return len(self._visited)

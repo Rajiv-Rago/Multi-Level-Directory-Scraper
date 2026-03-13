@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 
 from models.record import DirectoryRecord
 from pipeline.phone import normalize_phones
-from validation.collector import ValidationCollector
 
 
 def _make_record(**overrides):

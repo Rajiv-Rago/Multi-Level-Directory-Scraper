@@ -2,7 +2,7 @@
 
 import pytest
 
-from scraper.config import ScrapeConfig, apply_overrides, load_config
+from scraper.config import apply_overrides, load_config
 
 
 class TestConfigLoading:

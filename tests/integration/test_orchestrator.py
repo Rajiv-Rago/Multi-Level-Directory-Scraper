@@ -1,6 +1,5 @@
 """Integration tests for crawl orchestrator with local test server."""
 
-import asyncio
 
 import pytest
 import pytest_asyncio

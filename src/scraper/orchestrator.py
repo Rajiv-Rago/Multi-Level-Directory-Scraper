@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from urllib.parse import urljoin
+from dataclasses import dataclass
 
 import structlog
 
@@ -32,6 +31,7 @@ class CrawlConfig:
     base_url: str
     levels: list[LevelConfig]
     delay: float = 1.0
+    max_pages_per_level: int | None = None
 
 
 class CrawlOrchestrator:
@@ -61,7 +61,14 @@ class CrawlOrchestrator:
             level_records = 0
             level_urls = 0
 
+            max_urls = self._config.max_pages_per_level
+
             while self._frontier.has_pending(level.depth):
+                if max_urls is not None and level_urls >= max_urls:
+                    logger.info("level_max_pages_reached", depth=level.depth, max_pages=max_urls)
+                    self._frontier.drain(level.depth)
+                    break
+
                 item = self._frontier.pop(level.depth)
                 level_urls += 1
 
@@ -82,7 +89,7 @@ class CrawlOrchestrator:
                         level_records += 1
                     else:
                         links = self._extractor.extract_links(
-                            page_html, level.link_selector
+                            page_html, level.link_selector, item.url
                         )
                         context_label = None
                         if level.context_selector:
@@ -93,8 +100,7 @@ class CrawlOrchestrator:
                             {"level": level.name, "label": context_label, "url": item.url}
                         ]
                         for link in links:
-                            absolute_url = urljoin(item.url, link)
-                            self._frontier.add(absolute_url, level.depth + 1, ancestors)
+                            self._frontier.add(link, level.depth + 1, ancestors)
 
                 if self._delay_fn:
                     await self._delay_fn()

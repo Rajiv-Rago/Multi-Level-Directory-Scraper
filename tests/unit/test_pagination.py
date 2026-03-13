@@ -1,6 +1,6 @@
 """Tests for pagination handler: next_page, load_more, infinite_scroll strategies."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 

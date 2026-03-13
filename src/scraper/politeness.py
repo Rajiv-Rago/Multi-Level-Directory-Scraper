@@ -23,8 +23,11 @@ class PolitenessController:
         self._crawl_delay: float = 0.0
 
     async def initialize(self) -> None:
-        """Fetch and parse robots.txt from the target site."""
-        robots_url = f"{self._config.site.base_url.rstrip('/')}/robots.txt"
+        """Fetch and parse robots.txt from the target site's domain root."""
+        from urllib.parse import urlparse
+
+        parsed = urlparse(self._config.site.base_url)
+        robots_url = f"{parsed.scheme}://{parsed.netloc}/robots.txt"
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(robots_url, headers={"User-Agent": USER_AGENT})

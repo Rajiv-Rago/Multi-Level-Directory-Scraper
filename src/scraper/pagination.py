@@ -10,6 +10,8 @@ from urllib.parse import urljoin
 import structlog
 from bs4 import BeautifulSoup
 
+from scraper.extractor import get_base_url
+
 logger = structlog.get_logger()
 
 
@@ -48,7 +50,7 @@ class PaginationHandler:
         return [initial_html]
 
     async def _next_page(
-        self, initial_html: str, config: PaginationConfig, base_url: str
+        self, initial_html: str, config: PaginationConfig, page_url: str
     ) -> list[str]:
         pages = [initial_html]
         current_html = initial_html
@@ -59,6 +61,7 @@ class PaginationHandler:
             if next_el is None or not next_el.get("href"):
                 break
 
+            base_url = get_base_url(current_html, page_url)
             next_url = urljoin(base_url, next_el["href"])
             current_html = await self._fetcher.fetch(next_url)
             if current_html is None:

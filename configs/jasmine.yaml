@@ -1,0 +1,50 @@
+# Jasmine Directory - Easy test (server-rendered, simple hierarchy)
+# Scope: Business & Marketing category only, max 5 pages per level
+
+site:
+  name: "Jasmine Directory"
+  base_url: "https://www.jasminedirectory.com/business-marketing/"
+  output_dir: "./output/jasmine"
+  request_delay:
+    min: 1.5
+    max: 3.0
+  max_pages: 5
+  log_level: "info"
+
+levels:
+  # Level 0: Category page - extract links to subcategories
+  - name: "categories"
+    depth: 0
+    link_selector: "#catbox ul li a"
+    context_selector: "h1"
+    renderer: "static"
+    fields:
+      - name: "category_name"
+        selector: "#catbox ul li a"
+
+  # Level 1: Subcategory page - extract links to detail pages
+  - name: "listings"
+    depth: 1
+    link_selector: ".lnkop a"
+    context_selector: "h1"
+    renderer: "static"
+    pagination:
+      type: "next_page"
+      selector: "div.pgsel a"
+      max_pages: 3
+    fields:
+      - name: "listing_name"
+        selector: ".entryHigh a.featuredBox, .entryNorm .entryNorm9"
+
+  # Level 2: Detail pages - extract business data
+  - name: "details"
+    depth: 2
+    renderer: "static"
+    fields:
+      - name: "name"
+        selector: "article.post h1"
+      - name: "website"
+        selector: "article.post ul a[href^='http']"
+        attribute: "href"
+      - name: "description"
+        selector: "article.post .post-content"

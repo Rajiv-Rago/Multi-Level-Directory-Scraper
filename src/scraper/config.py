@@ -27,8 +27,9 @@ class RequestDelayConfig(BaseModel):
 class PaginationConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    type: Literal["next_button", "load_more", "infinite_scroll", "none"]
+    type: Literal["next_page", "load_more", "infinite_scroll", "none"]
     selector: str | None = None
+    max_pages: int = 100
 
 
 class FieldMapping(BaseModel):
@@ -45,7 +46,10 @@ class LevelConfig(BaseModel):
 
     name: str
     depth: int
-    link_selector: str
+    link_selector: str | None = None
+    context_selector: str | None = None
+    renderer: Literal["static", "browser"] = "static"
+    wait_selector: str | None = None
     pagination: PaginationConfig | None = None
     fields: list[FieldMapping]
 
