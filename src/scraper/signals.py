@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import signal
 import sys
-from typing import Callable
+from collections.abc import Callable
 
 from scraper.checkpoint import CheckpointManager
 

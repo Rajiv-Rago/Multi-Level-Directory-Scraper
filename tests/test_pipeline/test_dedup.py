@@ -1,6 +1,6 @@
 """Tests for deduplication pipeline stage."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from models.record import DirectoryRecord
 from pipeline.dedup import deduplicate
@@ -12,7 +12,7 @@ def _make_record(**overrides):
         "category": "Test",
         "name": "Test Record",
         "source_url": "https://example.com/1",
-        "scraped_at": datetime.now(timezone.utc),
+        "scraped_at": datetime.now(UTC),
     }
     defaults.update(overrides)
     return DirectoryRecord(**defaults)

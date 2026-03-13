@@ -3,7 +3,6 @@
 
 from scraper.extractor import Extractor
 
-
 SAMPLE_HTML = """
 <html><body>
   <h1 class="name">Acme Corp</h1>

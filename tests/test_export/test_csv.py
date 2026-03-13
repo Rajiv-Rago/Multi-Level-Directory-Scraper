@@ -1,10 +1,10 @@
 """Tests for CSV export module."""
 
 import csv
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from models.record import DirectoryRecord
 from export.csv_export import export_csv
+from models.record import DirectoryRecord
 
 
 def _make_record(**overrides):
@@ -13,7 +13,7 @@ def _make_record(**overrides):
         "category": "Restaurants",
         "name": "Test Cafe",
         "source_url": "https://example.com/1",
-        "scraped_at": datetime(2026, 1, 15, 12, 0, 0, tzinfo=timezone.utc),
+        "scraped_at": datetime(2026, 1, 15, 12, 0, 0, tzinfo=UTC),
     }
     defaults.update(overrides)
     return DirectoryRecord(**defaults)
@@ -72,7 +72,7 @@ class TestExportCsv:
         assert row["name"] == 'Cafe "The Best", Inc.'
 
     def test_serializes_datetime_as_iso(self, tmp_path):
-        ts = datetime(2026, 1, 15, 12, 0, 0, tzinfo=timezone.utc)
+        ts = datetime(2026, 1, 15, 12, 0, 0, tzinfo=UTC)
         records = [_make_record(scraped_at=ts)]
         path = tmp_path / "data.csv"
         export_csv(records, path)

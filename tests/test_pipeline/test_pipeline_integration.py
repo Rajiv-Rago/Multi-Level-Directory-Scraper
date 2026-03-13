@@ -2,14 +2,14 @@
 
 import csv
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from models.record import DirectoryRecord
 from pipeline import run_pipeline
 
 
 def test_pipeline_produces_all_output_files(tmp_path):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     records = [
         DirectoryRecord(
             region="Northeast",
@@ -102,7 +102,7 @@ def test_pipeline_produces_all_output_files(tmp_path):
 
 
 def test_text_cleaning_applied_in_output(tmp_path):
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     records = [
         DirectoryRecord(
             region="Test",

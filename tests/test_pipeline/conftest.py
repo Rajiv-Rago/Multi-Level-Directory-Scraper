@@ -1,6 +1,6 @@
 """Shared fixtures for pipeline tests."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -10,7 +10,7 @@ from validation.collector import ValidationCollector
 
 @pytest.fixture()
 def sample_records():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return [
         DirectoryRecord(
             region="Northeast",

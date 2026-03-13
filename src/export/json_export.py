@@ -1,7 +1,7 @@
 """JSON export with nested region/category hierarchy."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from itertools import groupby
 from operator import attrgetter
 from pathlib import Path
@@ -12,7 +12,7 @@ from models.record import DirectoryRecord
 def export_json(records: list[DirectoryRecord], output_path: Path, base_url: str) -> None:
     output = {
         "metadata": {
-            "scraped_at": datetime.now(timezone.utc).isoformat(),
+            "scraped_at": datetime.now(UTC).isoformat(),
             "target_url": base_url,
             "total_records": len(records),
             "schema_version": "1.0",

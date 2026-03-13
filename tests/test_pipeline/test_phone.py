@@ -1,6 +1,6 @@
 """Tests for phone normalization pipeline stage."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from models.record import DirectoryRecord
 from pipeline.phone import normalize_phones
@@ -12,7 +12,7 @@ def _make_record(**overrides):
         "category": "Test",
         "name": "Test",
         "source_url": "https://example.com",
-        "scraped_at": datetime.now(timezone.utc),
+        "scraped_at": datetime.now(UTC),
     }
     defaults.update(overrides)
     return DirectoryRecord(**defaults)

@@ -1,6 +1,6 @@
 """Tests for URL validation and resolution pipeline stage."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -14,7 +14,7 @@ def _make_record(**overrides):
         "category": "Test",
         "name": "Test",
         "source_url": "https://example.com/page",
-        "scraped_at": datetime.now(timezone.utc),
+        "scraped_at": datetime.now(UTC),
     }
     defaults.update(overrides)
     return DirectoryRecord(**defaults)

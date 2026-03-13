@@ -1,10 +1,10 @@
 """Tests for JSON export module."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from models.record import DirectoryRecord
 from export.json_export import export_json
+from models.record import DirectoryRecord
 
 
 def _make_record(**overrides):
@@ -13,7 +13,7 @@ def _make_record(**overrides):
         "category": "Restaurants",
         "name": "Test Cafe",
         "source_url": "https://example.com/1",
-        "scraped_at": datetime(2026, 1, 15, 12, 0, 0, tzinfo=timezone.utc),
+        "scraped_at": datetime(2026, 1, 15, 12, 0, 0, tzinfo=UTC),
     }
     defaults.update(overrides)
     return DirectoryRecord(**defaults)

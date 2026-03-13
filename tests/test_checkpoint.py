@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -87,7 +87,7 @@ class TestStaleCheckpoint:
     def test_stale_checkpoint_warns_but_loads(self, manager, sample_state, caplog):
         manager.save(sample_state)
 
-        old_time = (datetime.now(timezone.utc) - timedelta(hours=25)).isoformat()
+        old_time = (datetime.now(UTC) - timedelta(hours=25)).isoformat()
         raw = json.loads(manager.checkpoint_path.read_text())
         raw["checkpoint_at"] = old_time
         manager.checkpoint_path.write_text(json.dumps(raw))

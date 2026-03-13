@@ -7,7 +7,7 @@ import json
 import logging
 import os
 import tempfile
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -43,8 +43,8 @@ class CheckpointManager:
         data = {
             "version": CHECKPOINT_VERSION,
             "config_hash": self._config_hash,
-            "started_at": state.get("started_at", datetime.now(timezone.utc).isoformat()),
-            "checkpoint_at": datetime.now(timezone.utc).isoformat(),
+            "started_at": state.get("started_at", datetime.now(UTC).isoformat()),
+            "checkpoint_at": datetime.now(UTC).isoformat(),
             "visited_urls": sorted(visited),
             "pending_urls": state.get("pending_urls", []),
             "records_extracted": state.get("records_extracted", 0),
@@ -97,8 +97,8 @@ class CheckpointManager:
         if checkpoint_at:
             checkpoint_time = datetime.fromisoformat(checkpoint_at)
             if checkpoint_time.tzinfo is None:
-                checkpoint_time = checkpoint_time.replace(tzinfo=timezone.utc)
-            age = datetime.now(timezone.utc) - checkpoint_time
+                checkpoint_time = checkpoint_time.replace(tzinfo=UTC)
+            age = datetime.now(UTC) - checkpoint_time
             if age > timedelta(hours=STALE_THRESHOLD_HOURS):
                 logger.warning(
                     "Stale checkpoint (%.1f hours old). Proceeding with resume.",

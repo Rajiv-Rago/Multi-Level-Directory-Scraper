@@ -1,10 +1,10 @@
 """Tests for validation report and stdout summary."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from models.record import DirectoryRecord
 from export.report import print_summary, write_report
+from models.record import DirectoryRecord
 from validation.collector import ValidationCollector
 
 
@@ -14,7 +14,7 @@ def _make_record(**overrides):
         "category": "Test",
         "name": "Test",
         "source_url": "https://example.com",
-        "scraped_at": datetime.now(timezone.utc),
+        "scraped_at": datetime.now(UTC),
     }
     defaults.update(overrides)
     return DirectoryRecord(**defaults)

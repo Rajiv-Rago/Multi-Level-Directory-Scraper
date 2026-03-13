@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 
@@ -76,7 +76,7 @@ def _records_to_models(raw_records: list[dict], config: ScrapeConfig) -> list:
             website=raw.get("website"),
             description=raw.get("description"),
             source_url=raw.get("_source_url", ""),
-            scraped_at=datetime.now(timezone.utc),
+            scraped_at=datetime.now(UTC),
         ))
 
     return results
@@ -86,7 +86,8 @@ async def run_crawl(config: ScrapeConfig, logger, resume_state: dict | None = No
     """Run the full crawl pipeline: fetch → extract → clean → export."""
     import random
 
-    from scraper.checkpoint import CheckpointManager, config_hash as compute_config_hash
+    from scraper.checkpoint import CheckpointManager
+    from scraper.checkpoint import config_hash as compute_config_hash
     from scraper.extractor import Extractor
     from scraper.fetcher import HttpxFetcher, PlaywrightFetcher
     from scraper.frontier import URLFrontier
@@ -286,11 +287,11 @@ def _print_table(rows: list[tuple[str, str, str, str]], logger) -> None:
 @app.command()
 def main(
     config_path: Annotated[Path, typer.Argument(help="Path to YAML config file")],
-    output_dir: Annotated[Optional[str], typer.Option("--output-dir", help="Override output directory")] = None,
-    delay_min: Annotated[Optional[float], typer.Option("--delay-min", help="Minimum request delay (seconds)")] = None,
-    delay_max: Annotated[Optional[float], typer.Option("--delay-max", help="Maximum request delay (seconds)")] = None,
-    max_pages: Annotated[Optional[int], typer.Option("--max-pages", help="Maximum pages per level")] = None,
-    log_level: Annotated[Optional[str], typer.Option("--log-level", help="Log level: debug/info/warning")] = None,
+    output_dir: Annotated[str | None, typer.Option("--output-dir", help="Override output directory")] = None,
+    delay_min: Annotated[float | None, typer.Option("--delay-min", help="Minimum request delay (seconds)")] = None,
+    delay_max: Annotated[float | None, typer.Option("--delay-max", help="Maximum request delay (seconds)")] = None,
+    max_pages: Annotated[int | None, typer.Option("--max-pages", help="Maximum pages per level")] = None,
+    log_level: Annotated[str | None, typer.Option("--log-level", help="Log level: debug/info/warning")] = None,
     dry_run: Annotated[bool, typer.Option("--dry-run", help="Validate config and test selectors without full crawl")] = False,
     resume: Annotated[bool, typer.Option("--resume", help="Resume from checkpoint if available")] = False,
     force: Annotated[bool, typer.Option("--force", help="Force resume even with config mismatch")] = False,
@@ -318,7 +319,8 @@ def main(
 
     resume_state = None
     if resume:
-        from scraper.checkpoint import CheckpointManager, config_hash as compute_config_hash
+        from scraper.checkpoint import CheckpointManager
+        from scraper.checkpoint import config_hash as compute_config_hash
 
         output_path = Path(config.site.output_dir)
         cfg_hash = compute_config_hash({"base_url": config.site.base_url, "levels": len(config.levels)})

@@ -1,7 +1,7 @@
 """Validation report writer and stdout summary."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from models.record import DirectoryRecord
@@ -34,7 +34,7 @@ def write_report(
     duplicates_removed = collector.stats.get("duplicates_removed", 0)
     report = {
         "run_metadata": {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "duration_seconds": round(collector.duration_seconds, 2),
             "config_used": config,
         },
