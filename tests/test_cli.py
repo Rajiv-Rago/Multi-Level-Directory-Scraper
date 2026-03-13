@@ -84,7 +84,7 @@ class TestCLI:
         assert len(log_files) == 0
 
     def test_cli_help_output(self):
-        result = runner.invoke(app, ["--help"])
+        result = runner.invoke(app, ["--help"], env={"NO_COLOR": "1"})
         assert result.exit_code == 0
         assert "config-path" in result.output.lower() or "config_path" in result.output.lower()
         assert "--dry-run" in result.output
