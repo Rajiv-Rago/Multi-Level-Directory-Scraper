@@ -64,8 +64,9 @@ def _records_to_models(raw_records: list[dict], config: ScrapeConfig) -> list:
     results = []
     for raw in raw_records:
         ancestors = raw.get("_ancestors", [])
-        region = ancestors[0]["label"] if len(ancestors) > 0 and ancestors[0].get("label") else "Unknown"
-        category = ancestors[1]["label"] if len(ancestors) > 1 and ancestors[1].get("label") else region
+        labels = [a["label"] for a in ancestors if a.get("label")]
+        region = labels[0] if labels else "Unknown"
+        category = labels[1] if len(labels) > 1 else region
 
         results.append(DirectoryRecord(
             region=region,

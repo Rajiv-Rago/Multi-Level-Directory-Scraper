@@ -1,0 +1,51 @@
+# Psychology Today Therapist Directory
+# 3-level crawl: states -> listings (with pagination) -> profiles
+# Scoped to max_pages: 5 per level for a respectful demo run
+
+site:
+  name: "Psychology Today Therapists"
+  base_url: "https://www.psychologytoday.com/us/therapists"
+  output_dir: "./output/psychologytoday"
+  request_delay:
+    min: 2.0
+    max: 4.0
+  max_pages: 5
+  log_level: "info"
+
+levels:
+  # Level 0: Main page -> state links
+  - name: "states"
+    depth: 0
+    link_selector: "a.search-landing-suggestion-link"
+    fields:
+      - name: "state_name"
+        selector: "a.search-landing-suggestion-link"
+
+  # Level 1: State page -> therapist profile links (with pagination)
+  - name: "listings"
+    depth: 1
+    link_selector: "a.profile-title"
+    context_selector: "h1"
+    pagination:
+      type: "next_page"
+      selector: "a.previous-next-btn[title*='Next']"
+      max_pages: 2
+    fields:
+      - name: "listing_name"
+        selector: ".profile-title"
+
+  # Level 2: Therapist profile page -> extract fields
+  - name: "profiles"
+    depth: 2
+    fields:
+      - name: "name"
+        selector: "h1.profile-title"
+      - name: "phone"
+        selector: ".profile-phone a"
+      - name: "address"
+        selector: ".address-region"
+      - name: "description"
+        selector: ".personal-statement-container"
+      - name: "website"
+        selector: ".profile-website a"
+        attribute: "href"
