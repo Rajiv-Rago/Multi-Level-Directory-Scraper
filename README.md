@@ -1,5 +1,6 @@
 # Multi-Level Directory Scraper
 
+[![PyPI](https://img.shields.io/pypi/v/multi-level-directory-scraper)](https://pypi.org/project/multi-level-directory-scraper/)
 ![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)
 [![codecov](https://codecov.io/gh/Rajiv-Rago/Multi-Level-Directory-Scraper/graph/badge.svg)](https://codecov.io/gh/Rajiv-Rago/Multi-Level-Directory-Scraper)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
@@ -35,17 +36,24 @@ This scraper solves all of these in a single config-driven tool.
 ## Quick Start
 
 ```bash
-# Clone and install
+# Install from PyPI
+pip install multi-level-directory-scraper
+playwright install chromium
+
+# Run with your config
+scraper config.yaml
+
+# Validate selectors before a full crawl
+scraper config.yaml --dry-run
+```
+
+Or install from source:
+
+```bash
 git clone https://github.com/Rajiv-Rago/Multi-Level-Directory-Scraper.git
 cd Multi-Level-Directory-Scraper
 uv sync
 uv run playwright install chromium
-
-# Run with your config
-uv run python -m scraper config.yaml
-
-# Validate selectors before a full crawl
-uv run python -m scraper config.yaml --dry-run
 ```
 
 ## Architecture
